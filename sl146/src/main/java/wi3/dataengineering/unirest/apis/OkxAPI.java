@@ -1,5 +1,7 @@
 package wi3.dataengineering.unirest.apis;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -7,7 +9,6 @@ import com.google.gson.Gson;
 
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
-import kong.unirest.json.JSONObject;
 import wi3.dataengineering.unirest.APIsInterface;
 import wi3.dataengineering.unirest.CoinsInterface;
 import wi3.dataengineering.unirest.OkxCoinObject;
@@ -125,6 +126,11 @@ public class OkxAPI implements APIsInterface{
         CoinsInterface xtzCoin = new Tezos(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
         coins.add(xtzCoin);   
 
+        //export of demo data
+        //do not forget to delete
+        exportCoin("sl146/BTC_OKX.json", btcCoin);
+        exportCoin("sl146/ETH_OKX.json", ethCoin);
+
        return coins;
     }
 
@@ -151,6 +157,12 @@ public class OkxAPI implements APIsInterface{
         candlesBinance.add(getCandleData("SHIB-USDT"));
         // Candles Tezos
         candlesBinance.add(getCandleData("XTZ-USDT"));
+
+        //testing exports
+        //do not forget to delete
+        exportCandle(getCandleData("BTCUSDT"), "sl146/BTC_Candle_OKX.csv");
+        exportCandle(getCandleData("ETHUSDT"), "sl146/ETH_Candle_OKX.csv");
+
         return candlesBinance;
     }
     
@@ -188,5 +200,35 @@ public class OkxAPI implements APIsInterface{
 
         Collections.reverse(binanceCandlesList);
         return binanceCandlesList;
+    }
+
+    // hilfsmethode export csv
+    private void exportCandle(ArrayList<CandleStick> candles, String filename) {
+        FileWriter file; 
+            try {
+                file = new FileWriter(filename);
+                file.write("openTime, openTimeStamp, open, high, low, close, volume, closeTime, closeTimeStamp, quoteAssetVolume, numberOfTrades, takerBuyBase, takerBuyQuote, IGNORE" + "\n");
+                for (CandleStick candleStick : candles) {
+                    file.write(candleStick.toStringCSV());
+                }
+                file.flush();
+                file.close();
+                System.out.println("Erfolgreicher Export Candle-Data OKX!");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+
+    private void exportCoin(String filename, CoinsInterface coin) {
+        FileWriter file; 
+        try {
+            file = new FileWriter(filename);
+            file.write(new Gson().toJson(coin));
+            file.flush();
+            file.close();
+            System.out.println("Erfolgreicher Export Coin-Data OKX!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

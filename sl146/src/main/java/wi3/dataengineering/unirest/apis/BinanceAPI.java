@@ -4,6 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
+
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import wi3.dataengineering.unirest.APIsInterface;
@@ -64,6 +66,12 @@ public class BinanceAPI implements APIsInterface{
 				    .asObject(Tezos.class)
                     .getBody();
         coins.add(xtz);
+
+        //export of demo data
+        //do not forget to delete
+        exportCoin("sl146/BTC_Binance.json", btc);
+        exportCoin("sl146/ETH_Binance.json", eth);
+
         return coins;
 
         /*    Old Coins, which will not be used anymore 
@@ -120,6 +128,11 @@ public class BinanceAPI implements APIsInterface{
         // Candles Tezos
         candlesBinance.add(getCandleData("XTZUSDT"));
 
+        //testing exports
+        //do not forget to delete
+        exportCandle(getCandleData("BTCUSDT"), "sl146/BTC_Candle_Binance.csv");
+        exportCandle(getCandleData("ETHUSDT"), "sl146/ETH_Candle_Binance.csv");
+
         return candlesBinance;
     }
 
@@ -156,19 +169,32 @@ public class BinanceAPI implements APIsInterface{
     }
 
     // hilfsmethode export csv
-    private void export(ArrayList<CandleStick> candles) {
+    private void exportCandle(ArrayList<CandleStick> candles, String filename) {
         FileWriter file; 
             try {
-                file = new FileWriter("BinanceCandleDataBTC.csv");
+                file = new FileWriter(filename);
                 file.write("openTime, openTimeStamp, open, high, low, close, volume, closeTime, closeTimeStamp, quoteAssetVolume, numberOfTrades, takerBuyBase, takerBuyQuote, IGNORE" + "\n");
                 for (CandleStick candleStick : candles) {
                     file.write(candleStick.toStringCSV());
                 }
                 file.flush();
                 file.close();
-                System.out.println("Erfolgreicher Export!");
+                System.out.println("Erfolgreicher Export Candle-Data Binance!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
+    }
+
+    private void exportCoin(String filename, CoinsInterface coin) {
+        FileWriter file; 
+        try {
+            file = new FileWriter(filename);
+            file.write(new Gson().toJson(coin));
+            file.flush();
+            file.close();
+            System.out.println("Erfolgreicher Export Coin-Data Binance!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
