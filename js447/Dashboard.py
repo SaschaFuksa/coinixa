@@ -4,17 +4,30 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash
 import pandas as pd
-from datetime import datetime
+import time
+# from datetime import datetime
+import datetime
+from dash import Output, Input
 
-df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv')
+# df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv')
+# df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
+df3 = pd.read_csv(r'C:\Users\Jakob\Downloads\coins.csv')
+# coins = pd.read_csv()
 
-fig = go.Figure(data=[go.Candlestick(x=df['Date'],
-                                     open=df['AAPL.Open'],
-                                     high=df['AAPL.High'],
-                                     low=df['AAPL.Low'],
-                                     close=df['AAPL.Close'])])
+# fig = go.Figure(data=[go.Candlestick(x=df['Date'],
+#                                      open=df['AAPL.Open'],
+#                                      high=df['AAPL.High'],
+#                                      low=df['AAPL.Low'],
+#                                      close=df['AAPL.Close'])])
 
-fig.update_layout(xaxis_rangeslider_visible=True)
+
+# fig = go.Figure(data=[go.Candlestick(x=df2['closeTimeStamp'],
+#                                      open=df2['open'],
+#                                      high=df2['high'],
+#                                      low=df2['low'],
+#                                      close=df2['close'])])
+#
+# fig.update_layout(xaxis_rangeslider_visible=False)
 
 # Initialize the app
 app = dash.Dash(__name__,
@@ -64,10 +77,13 @@ app.layout = html.Div(
                 ),
 
                 html.Div(
-                    dcc.RadioItems(
-                        options=['Binance', 'OKX', 'Bitenium', 'Coinbase Pro'],
-                        value='Binance',
-                        inline=False
+                    dcc.Checklist(
+
+                        ['Binance', 'OKX', 'Bitenium', 'Coinbase Pro'],
+                        ['Binance'],
+                        inline=True,
+                        id='select-api'
+
                     )
 
                 ),
@@ -76,7 +92,7 @@ app.layout = html.Div(
 
             dbc.Col([
                 html.H1('Coin'),
-                dcc.Dropdown(['Bitcoin', 'Etherium', 'Cardano'], 'Bitcoin', id='coin-dropdown'),
+                dcc.Dropdown(df3['CoinID'], 'Bitcoin', id='coin-dropdown'),
             ], className='card-tab card', width=True),
 
             dbc.Col([
@@ -114,12 +130,16 @@ app.layout = html.Div(
                                     3: '02/17/2022',
                                     4: '02/18/2022'
                                 },
-                                value=[0, 4]
+                                value=[0, 4],
+                                id='slider'
                             )
                         ]),
 
                         html.Div(
-                            dcc.Graph(figure=fig, config={'responsive': True},
+                            # dcc.Graph(figure=fig, config={'responsive': True},
+                            #           className='chart'),
+                            dcc.Graph(id='exhange-rate-graph',
+                                      config={'responsive': True},
                                       className='chart'),
                         ),
                     ]),
@@ -153,6 +173,34 @@ app.layout = html.Div(
 
     ])
 
+
+####Callbacks#####
+
+
+@app.callback(
+    Output('exhange-rate-graph', 'figure'),
+    [Input('coin-dropdown', 'value'),
+     Input('select-api', 'value'),
+     Input('slider', 'value')])
+def update_graph(api_id, coin_id, slider_data):
+    df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
+    df2.columns = df2.columns.str.strip()
+    return {'data': [{
+        'x': df2['closeTimeStamp'],
+        'open': df2['open'],
+        'high': df2['high'],
+        'low': df2['low'],
+        'close': df2['close'],
+        'type': 'candlestick',
+        }],
+        'layout': {
+            'margin': {'b': 0, 'r': 10, 'l': 10, 't': 0},
+            'legend': {'x': 0},
+            'xaxis_rangeslider_visible': 'False'
+        }
+        }
+
+    fig.update_layout(xaxis_rangeslider_visible=False)
 # server
 if __name__ == '__main__':
     app.run_server(debug=True)
