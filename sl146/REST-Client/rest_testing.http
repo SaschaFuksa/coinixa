@@ -1,0 +1,16 @@
+
+//Binance:
+//https://api.binance.com/api/v3/ticker/price?symbol=BNBBTC
+//https://api.binance.com/api/v3/trades?symbol=BNBBTC
+
+//https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&startTime=1643670000000
+
+//https://api.binance.com/api/v3/ticker/24hr?symbol=BNBUSDT
+
+//OKX:
+//https://www.okx.com/api/v5/market/ticker?instId=SAFEMOON-USDT
+https://www.okx.com/api/v5/market/candles?instId=BTC-USDT&bar=1H&before=1643670000000
+
+//Bitenium:
+//https://api.bitenium.com/spotapi/api/ticker24Hr?symbol=BTCUSDT
+//https://api.bitenium.com/spotapi/api/klines?symbol=BTCUSDT&interval=1h&startTime=1643670000000
