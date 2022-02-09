@@ -26,7 +26,10 @@ div {
 }
 
 .card {
-    padding: 24px 24px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    padding-left: 24px;
+    padding-right: 24px;
     border-radius: 6px;
     border: none;
     background: white;
@@ -36,6 +39,10 @@ div {
     margin-right: 6px !important;
 }
 
+.checklist-items{
+    margin-right: 50px;
+    margin-left: 50px;
+}
 
 .column-header-name {
     font-family: 'Open Sans', 'Ubuntu', 'Lato', sans-serif !important;
@@ -208,6 +215,13 @@ h5 {
 }
 
 
+dcc-input{
+    width: 200px;
+    margin-left: 20px;
+    display: inline-block;
+}
 
 
-
+submit-button{
+    width: 200px;
+}

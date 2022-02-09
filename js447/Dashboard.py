@@ -80,11 +80,12 @@ app.layout = html.Div(
                 html.Div(
                     dcc.Checklist(
 
-                        ['Binance', 'OKX', 'Bitenium', 'Coinbase Pro'],
+                        ['Binance', 'OKX', 'Bitenium'],
                         ['Binance'],
-                        inline=True,
-                        id='select-api'
-
+                        # inline=False,
+                        id='select-api',
+                        inputStyle={"margin-right": "50px", "margin-left": "50px"},
+                        className='checklist-items'
                     )
 
                 ),
@@ -106,7 +107,6 @@ app.layout = html.Div(
                 ####Actual value displayed########
 
                 html.Div([], id='actual-value'),
-
 
             ], className='card-tab card', width=True),
 
@@ -165,10 +165,10 @@ app.layout = html.Div(
 
                                                                                             }),
                 dcc.Input(id="threshold-input", type="text", placeholder=" value...", style={'width': '200px',
-                                                                                             'margin-left': 20,
-                                                                                             'display': 'inline-block'
+                                                                                            'margin-left': 20,
+                                                                                            'display': 'inline-block'
 
-                                                                                             }),
+                                                                                            }),
 
                 html.Button('Submit', id='submit-button', n_clicks=0),
             ], className='card-tab card', width=True),
@@ -223,16 +223,21 @@ def update_graph(api_id, coin_id, slider_data):
         # for i in api_id:
 
 
-########Calllback Infocard###########
+########Calllback actual value tab###########
 
 @app.callback(
     Output('actual-value', 'children'),
     [Input('select-api', 'value'),
      Input('coin-dropdown', 'value')])
+# function setactualvalue builds the actual value tab and coin specific information
+
 def setactualvalue(api_id, coin_id):
+    df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
+    df2.columns = df2.columns.str.strip()
     return [
         html.Div(
-            html.H4("12345$")
+            #####Zuweisung actual value, 4th row, last entry
+            html.H4(str(df2.iloc[-1, 3]) + " $")
         )
     ]
 
