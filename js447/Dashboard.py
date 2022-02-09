@@ -217,7 +217,6 @@ def update_graph(api_id, coin_id, slider_data):
         fig = go.Figure([go.Scatter(x=df2['closeTimeStamp'], y=df2['high'])])
         fig.add_trace(go.Scatter(x=df2['closeTimeStamp'], y=df2['low']))
         fig.add_trace(go.Scatter(x=df2['closeTimeStamp'], y=df2['low']))
-        fig.add_trace(go.Scatter(x=df2['closeTimeStamp'], y=df2['low']))
         fig.update_xaxes(range=[slider_data[0] * 45.5, slider_data[1] * 45.5])
         return fig
         # for i in api_id:
