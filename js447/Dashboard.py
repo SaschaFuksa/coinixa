@@ -85,7 +85,6 @@ app.layout = html.Div(
                         inline=True,
                         id='select-api'
 
-
                     )
 
                 ),
@@ -101,11 +100,14 @@ app.layout = html.Div(
 
                 html.Div(
                     html.H1('Actual value'),
-
                     className='map-margin'
 
                 ),
-                html.H4("47342$"),
+                ####Actual value displayed########
+
+                html.Div([], id='actual-value'),
+
+
             ], className='card-tab card', width=True),
 
         ]),
@@ -140,7 +142,7 @@ app.layout = html.Div(
                         html.Div(
                             # dcc.Graph(figure=fig, config={'responsive': True},
                             #           className='chart'),
-                            dcc.Graph(id='exhange-rate-graph',
+                            dcc.Graph(id='exchange-rate-graph',
                                       config={'responsive': True},
                                       className='chart'),
                         ),
@@ -158,15 +160,15 @@ app.layout = html.Div(
             dbc.Col([
                 html.H1('Notification mail'),
                 dcc.Input(id="mail-input", type="text", placeholder=" your mail...", style={'width': '200px',
-                                                                                         'margin-left': 20,
-                                                                                         'display': 'inline-block'
+                                                                                            'margin-left': 20,
+                                                                                            'display': 'inline-block'
 
-                                                                                         }),
+                                                                                            }),
                 dcc.Input(id="threshold-input", type="text", placeholder=" value...", style={'width': '200px',
-                                                                                       'margin-left': 20,
-                                                                                       'display': 'inline-block'
+                                                                                             'margin-left': 20,
+                                                                                             'display': 'inline-block'
 
-                                                                                       }),
+                                                                                             }),
 
                 html.Button('Submit', id='submit-button', n_clicks=0),
             ], className='card-tab card', width=True),
@@ -180,13 +182,11 @@ app.layout = html.Div(
 
 ####Callback Exchange-rate-graph#############
 @app.callback(
-    Output('exhange-rate-graph', 'figure'),
+    Output('exchange-rate-graph', 'figure'),
     [Input('select-api', 'value'),
      Input('coin-dropdown', 'value'),
      Input('slider', 'value')])
 def update_graph(api_id, coin_id, slider_data):
-
-
     print(slider_data)
     print(coin_id)
     print(len(api_id))
@@ -223,20 +223,30 @@ def update_graph(api_id, coin_id, slider_data):
         # for i in api_id:
 
 
+########Calllback Infocard###########
+
+@app.callback(
+    Output('actual-value', 'children'),
+    [Input('select-api', 'value'),
+     Input('coin-dropdown', 'value')])
+def setactualvalue(api_id, coin_id):
+    return [
+        html.Div(
+            html.H4("12345$")
+        )
+    ]
+
 
 #######Callback email notification#############
 
 
-
 @app.callback(
-        Output("newsletter", "children"),
-        [Input("submit", "n_clicks")],
-        [State("mail-input", "value"), State("threshold-input", "value")])
+    Output("newsletter", "children"),
+    [Input("submit", "n_clicks")],
+    [State("mail-input", "value"), State("threshold-input", "value")])
 def adduser(a, b, c):
     print(a)
     return None
-
-
 
     # fig.update_yaxes(range=[minY, maxY])
     # fig.update_layout(xaxis_rangeslider_visible=False)
