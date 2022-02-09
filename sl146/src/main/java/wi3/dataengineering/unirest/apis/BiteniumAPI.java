@@ -1,0 +1,156 @@
+package wi3.dataengineering.unirest.apis;
+
+import java.util.ArrayList;
+
+import kong.unirest.Unirest;
+import kong.unirest.json.JSONArray;
+import wi3.dataengineering.unirest.APIsInterface;
+import wi3.dataengineering.unirest.CoinsInterface;
+import wi3.dataengineering.unirest.candlesticks.CandleStick;
+import wi3.dataengineering.unirest.coins.Bitcoin;
+import wi3.dataengineering.unirest.coins.Cardano;
+import wi3.dataengineering.unirest.coins.Dogecoin;
+import wi3.dataengineering.unirest.coins.Ethereum;
+import wi3.dataengineering.unirest.coins.ShibaInu;
+import wi3.dataengineering.unirest.coins.Tezos;
+
+public class BiteniumAPI implements APIsInterface{
+
+    @Override
+    public ArrayList<CoinsInterface> getCoinData() {
+        // TODO Auto-generated method stub
+        ArrayList <CoinsInterface> coins = new ArrayList<CoinsInterface>();
+        CoinsInterface btc = new Bitcoin();
+        btc = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
+                    .queryString("symbol", "BTCUSDT")
+				    .asObject(Bitcoin.class)
+                    .getBody();
+        coins.add(btc);
+
+        CoinsInterface ada = new Cardano();
+        ada = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
+                    .queryString("symbol", "ADAUSDT")
+				    .asObject(Cardano.class)
+                    .getBody();
+        coins.add(ada);
+
+        CoinsInterface doge = new Dogecoin();
+        doge = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
+                    .queryString("symbol", "DOGEUSDT")
+				    .asObject(Dogecoin.class)
+                    .getBody();
+        coins.add(doge);
+
+        CoinsInterface eth = new Ethereum();
+        eth = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
+                    .queryString("symbol", "ADAUSDT")
+				    .asObject(Ethereum.class)
+                    .getBody();
+        coins.add(eth);
+
+        CoinsInterface shib = new ShibaInu();
+        shib = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
+                    .queryString("symbol", "SHIBUSDT")
+				    .asObject(ShibaInu.class)
+                    .getBody();
+        coins.add(shib);
+
+        CoinsInterface xtz = new Tezos();
+        xtz = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
+                    .queryString("symbol", "XTZUSDT")
+				    .asObject(Tezos.class)
+                    .getBody();
+        coins.add(xtz);
+
+        /* CoinsInterface ctk = new CertiK();
+        ctk = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
+                    .queryString("symbol", "CTKUSDT")
+				    .asObject(CertiK.class)
+                    .getBody();
+        coins.add(ctk);
+        
+        CoinsInterface cake = new PancakeSwap();
+        cake = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
+                    .queryString("symbol", "CAKEUSDT")
+				    .asObject(PancakeSwap.class)
+                    .getBody();
+        coins.add(cake);
+        
+        CoinsInterface safemoon = new SafeMoon();
+        safemoon = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
+                    .queryString("symbol", "SAFEMOONUSDT")
+				    .asObject(SafeMoon.class)
+                    .getBody();
+        coins.add(safemoon);
+        
+        CoinsInterface rari = new Rarible();
+        rari = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
+                    .queryString("symbol", "RARIUSDT")
+				    .asObject(Rarible.class)
+                    .getBody();
+        coins.add(rari);
+
+        */
+        return coins;
+    }
+
+    @Override
+    public void getCoinHistory() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public ArrayList<ArrayList<CandleStick>> getCandlestickData() {
+        // TODO Auto-generated method stub
+        ArrayList<ArrayList<CandleStick>> candlesBinance = new ArrayList<>();
+        
+        // Candles Bitcoin
+        candlesBinance.add(getCandleData("BTCUSDT"));
+        // Candles Cardano
+        candlesBinance.add(getCandleData("ADAUSDT"));
+        // Candles Dogecoin
+        candlesBinance.add(getCandleData("DOGEUSDT"));
+        // Candles Ethereum
+        candlesBinance.add(getCandleData("ETHUSDT"));
+        // Candles ShibaInu
+        candlesBinance.add(getCandleData("SHIBUSDT"));
+        // Candles Tezos
+        candlesBinance.add(getCandleData("XTZUSDT"));
+        return candlesBinance;
+    }
+    
+    private ArrayList<CandleStick> getCandleData(String symbol) {
+        JSONArray resp = Unirest.get("https://api.bitenium.com/spotapi/api/klines")
+                        .queryString("symbol", symbol)
+                        .queryString("interval", "1h")
+                        .asJson()
+                        .getBody()
+                        .getArray();
+        
+        ArrayList<CandleStick> biteniumCandlesList = new ArrayList<CandleStick>();
+        for (int i=0; i < resp.length(); i++) {
+            JSONArray candle = (JSONArray) resp.get(i);
+
+            long openTime = candle.getLong(0) * 1000;
+            float open = candle.getFloat(1);
+            float high = candle.getFloat(2);
+            float low = candle.getFloat(3);
+            float close = candle.getFloat(4);
+            float volume = candle.getFloat(5);
+            long closeTime = (candle.getLong(0) + 3600) * 1000;
+            /* float quoteAssetVolume = candle.getFloat(7);
+            long numberOfTrades = candle.getInt(8);
+            float takerBuyBase = candle.getFloat(9);
+            float takerBuyQuote = candle.getFloat(10);
+            float ignore = candle.getFloat(11); */
+
+            CandleStick candleData = new CandleStick(openTime, open, high, low, close, volume, closeTime
+                                                    , 0.0f, 0, 0.0f
+                                                    , 0.0f, 0.0f);
+            biteniumCandlesList.add(candleData);
+        }
+        return biteniumCandlesList;
+    }
+
+}
