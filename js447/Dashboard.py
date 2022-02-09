@@ -185,6 +185,17 @@ app.layout = html.Div(
 def update_graph(api_id, coin_id, slider_data):
     df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
     df2.columns = df2.columns.str.strip()
+
+    count = 0
+    for element in api_id:
+        count += 1
+
+    print(slider_data)
+    print(api_id)
+    print(coin_id)
+    print(len(api_id))
+    print(count)
+
     return {'data': [{
         'x': df2['closeTimeStamp'],
         'open': df2['open'],
@@ -192,15 +203,20 @@ def update_graph(api_id, coin_id, slider_data):
         'low': df2['low'],
         'close': df2['close'],
         'type': 'candlestick',
-        }],
+    }],
         'layout': {
             'margin': {'b': 0, 'r': 10, 'l': 10, 't': 0},
             'legend': {'x': 0},
-            'xaxis_rangeslider_visible': 'False'
+            # 'xaxis_rangeslider_visible': 'False',
+            'xaxis': {'range': [slider_data[0] * 45.5, slider_data[1] * 45.5]
+                      }
         }
-        }
+    }
 
+    # fig.update_yaxes(range=[minY, maxY])
     fig.update_layout(xaxis_rangeslider_visible=False)
+
+
 # server
 if __name__ == '__main__':
     app.run_server(debug=True)
