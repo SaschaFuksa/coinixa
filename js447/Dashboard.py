@@ -4,6 +4,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash
 import pandas as pd
+from dash.dependencies import Input, Output, State
 import time
 # from datetime import datetime
 import datetime
@@ -84,6 +85,7 @@ app.layout = html.Div(
                         inline=True,
                         id='select-api'
 
+
                     )
 
                 ),
@@ -155,18 +157,18 @@ app.layout = html.Div(
 
             dbc.Col([
                 html.H1('Notification mail'),
-                dcc.Input(id="mailbox", type="text", placeholder=" your mail...", style={'width': '200px',
+                dcc.Input(id="mail-input", type="text", placeholder=" your mail...", style={'width': '200px',
                                                                                          'margin-left': 20,
                                                                                          'display': 'inline-block'
 
                                                                                          }),
-                dcc.Input(id="threshold", type="text", placeholder=" value...", style={'width': '200px',
+                dcc.Input(id="threshold-input", type="text", placeholder=" value...", style={'width': '200px',
                                                                                        'margin-left': 20,
                                                                                        'display': 'inline-block'
 
                                                                                        }),
 
-                html.Button('Submit', id='submit', n_clicks=0),
+                html.Button('Submit', id='submit-button', n_clicks=0),
             ], className='card-tab card', width=True),
 
         ]),
@@ -176,45 +178,68 @@ app.layout = html.Div(
 
 ####Callbacks#####
 
-
+####Callback Exchange-rate-graph#############
 @app.callback(
     Output('exhange-rate-graph', 'figure'),
-    [Input('coin-dropdown', 'value'),
-     Input('select-api', 'value'),
+    [Input('select-api', 'value'),
+     Input('coin-dropdown', 'value'),
      Input('slider', 'value')])
 def update_graph(api_id, coin_id, slider_data):
-    df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
-    df2.columns = df2.columns.str.strip()
 
-    count = 0
-    for element in api_id:
-        count += 1
 
     print(slider_data)
-    print(api_id)
     print(coin_id)
     print(len(api_id))
-    print(count)
 
-    return {'data': [{
-        'x': df2['closeTimeStamp'],
-        'open': df2['open'],
-        'high': df2['high'],
-        'low': df2['low'],
-        'close': df2['close'],
-        'type': 'candlestick',
-    }],
-        'layout': {
-            'margin': {'b': 0, 'r': 10, 'l': 10, 't': 0},
-            'legend': {'x': 0},
-            # 'xaxis_rangeslider_visible': 'False',
-            'xaxis': {'range': [slider_data[0] * 45.5, slider_data[1] * 45.5]
-                      }
+    if len(api_id) == 1:
+        df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
+        df2.columns = df2.columns.str.strip()
+        return {'data': [{
+            'x': df2['closeTimeStamp'],
+            'open': df2['open'],
+            'high': df2['high'],
+            'low': df2['low'],
+            'close': df2['close'],
+            'type': 'candlestick',
+        }],
+            'layout': {
+                'margin': {'b': 0, 'r': 10, 'l': 10, 't': 0},
+                'legend': {'x': 0},
+                # 'xaxis_rangeslider_visible': 'False',
+                'xaxis': {'range': [slider_data[0] * 45.5, slider_data[1] * 45.5]
+                          }
+            }
         }
-    }
+    if len(api_id) > 1:
+        df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
+        df2.columns = df2.columns.str.strip()
+
+        fig = go.Figure([go.Scatter(x=df2['closeTimeStamp'], y=df2['high'])])
+        fig.add_trace(go.Scatter(x=df2['closeTimeStamp'], y=df2['low']))
+        fig.add_trace(go.Scatter(x=df2['closeTimeStamp'], y=df2['low']))
+        fig.add_trace(go.Scatter(x=df2['closeTimeStamp'], y=df2['low']))
+        fig.update_xaxes(range=[slider_data[0] * 45.5, slider_data[1] * 45.5])
+        return fig
+        # for i in api_id:
+
+
+
+#######Callback email notification#############
+
+
+
+@app.callback(
+        Output("newsletter", "children"),
+        [Input("submit", "n_clicks")],
+        [State("mail-input", "value"), State("threshold-input", "value")])
+def adduser(a, b, c):
+    print(a)
+    return None
+
+
 
     # fig.update_yaxes(range=[minY, maxY])
-    fig.update_layout(xaxis_rangeslider_visible=False)
+    # fig.update_layout(xaxis_rangeslider_visible=False)
 
 
 # server
