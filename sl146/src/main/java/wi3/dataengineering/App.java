@@ -45,12 +45,15 @@ public class App
         }  */
 
         APIsInterface candle = new BiteniumAPI();
+        candle.getCoinData();
         candle.getCandlestickData();
 
         APIsInterface candle2 = new BinanceAPI();
+        candle2.getCoinData();
         candle2.getCandlestickData();
 
         APIsInterface candle3 = new OkxAPI();
+        candle3.getCoinData();
         candle3.getCandlestickData();
 
         /* for (ArrayList<CandleStick> candleList : candle.getCandlestickData()) {

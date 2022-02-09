@@ -1,6 +1,10 @@
 package wi3.dataengineering.unirest.apis;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import com.google.gson.Gson;
 
 import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
@@ -62,6 +66,11 @@ public class BiteniumAPI implements APIsInterface{
                     .getBody();
         coins.add(xtz);
 
+        //export of demo data
+        //do not forget to delete
+        exportCoin("sl146/BTC_Bitenium.json", btc);
+        exportCoin("sl146/ETH_Bitenium.json", eth);
+
         /* CoinsInterface ctk = new CertiK();
         ctk = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
                     .queryString("symbol", "CTKUSDT")
@@ -117,6 +126,12 @@ public class BiteniumAPI implements APIsInterface{
         candlesBinance.add(getCandleData("SHIBUSDT"));
         // Candles Tezos
         candlesBinance.add(getCandleData("XTZUSDT"));
+
+        //testing exports
+        //do not forget to delete
+        exportCandle(getCandleData("BTCUSDT"), "sl146/BTC_Candle_Bitenium.csv");
+        exportCandle(getCandleData("ETHUSDT"), "sl146/ETH_Candle_Bitenium.csv");
+
         return candlesBinance;
     }
     
@@ -151,6 +166,36 @@ public class BiteniumAPI implements APIsInterface{
             biteniumCandlesList.add(candleData);
         }
         return biteniumCandlesList;
+    }
+
+    // hilfsmethode export csv
+    private void exportCandle(ArrayList<CandleStick> candles, String filename) {
+        FileWriter file; 
+            try {
+                file = new FileWriter(filename);
+                file.write("openTime, openTimeStamp, open, high, low, close, volume, closeTime, closeTimeStamp, quoteAssetVolume, numberOfTrades, takerBuyBase, takerBuyQuote, IGNORE" + "\n");
+                for (CandleStick candleStick : candles) {
+                    file.write(candleStick.toStringCSV());
+                }
+                file.flush();
+                file.close();
+                System.out.println("Erfolgreicher Export Candle-Data Bitenium!");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+
+    private void exportCoin(String filename, CoinsInterface coin) {
+        FileWriter file; 
+        try {
+            file = new FileWriter(filename);
+            file.write(new Gson().toJson(coin));
+            file.flush();
+            file.close();
+            System.out.println("Erfolgreicher Export Coin-Data Bitenium!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
