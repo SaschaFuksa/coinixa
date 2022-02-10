@@ -5,33 +5,12 @@ import dash_html_components as html
 import dash
 import pandas as pd
 from dash.dependencies import Input, Output, State
-import time
-# from datetime import datetime
-import datetime
 from dash import Output, Input
 
-# df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv')
-# df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
 df_coins = pd.read_csv(r'C:\Users\Jakob\PycharmProjects\Coinixa\js447\Data\UI\coins.csv')
 df_apis = pd.read_csv(r'C:\Users\Jakob\PycharmProjects\Coinixa\js447\Data\UI\apis.csv')
-# coins = pd.read_csv()
 
-# fig = go.Figure(data=[go.Candlestick(x=df['Date'],
-#                                      open=df['AAPL.Open'],
-#                                      high=df['AAPL.High'],
-#                                      low=df['AAPL.Low'],
-#                                      close=df['AAPL.Close'])])
-
-
-# fig = go.Figure(data=[go.Candlestick(x=df2['closeTimeStamp'],
-#                                      open=df2['open'],
-#                                      high=df2['high'],
-#                                      low=df2['low'],
-#                                      close=df2['close'])])
-#
-# fig.update_layout(xaxis_rangeslider_visible=False)
-
-# Initialize the app
+######## Initialize the app#######
 app = dash.Dash(__name__,
                 suppress_callback_exceptions=True,
                 external_stylesheets=[dbc.themes.BOOTSTRAP],
@@ -39,6 +18,8 @@ app = dash.Dash(__name__,
                     {"name": "viewport", "content": "width=device-width, initial-scale=1"}
                 ])
 app.config.suppress_callback_exceptions = True
+
+###########App Layout############
 
 app.layout = html.Div(
     className='content',
@@ -83,6 +64,7 @@ app.layout = html.Div(
 
                         df_apis['ApiID'],
                         ['Binance'],
+                        
                         # inline=False,
                         id='select-api',
                         inputStyle={"margin-right": "50px", "margin-left": "50px"},
@@ -140,8 +122,6 @@ app.layout = html.Div(
                         ]),
 
                         html.Div(
-                            # dcc.Graph(figure=fig, config={'responsive': True},
-                            #           className='chart'),
                             dcc.Graph(id='exchange-rate-graph',
                                       config={'responsive': True},
                                       className='chart'),
@@ -194,9 +174,6 @@ def update_graph(api_id, coin_id, slider_data):
     print(api_id[0])
 
     if len(api_id) == 1:
-        # df2 = pd.read_csv(r'C:/UsersJakob/PycharmProjects/Coinixa/js447/data/' + api_id[0] + '/'
-        #                   + coin_id[0] + 'candleStickData_' + api_id[0] + '_' + coin_id[0] + '.csv',
-        #                   parse_dates=True)
         df2 = pd.read_csv(
             'C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\' + api_id[0] + '\\'
             + coin_id + '\\candleStickData_' + api_id[0] + '_' + coin_id + '.csv',
@@ -216,21 +193,25 @@ def update_graph(api_id, coin_id, slider_data):
                 'margin': {'b': 0, 'r': 10, 'l': 10, 't': 0},
                 'legend': {'x': 0},
                 # 'xaxis_rangeslider_visible': 'False',
-                'xaxis': {'range': [slider_data[0] * len(df2.index)/2, slider_data[1] * len(df2.index)/2]
+                'xaxis': {'range': [slider_data[0] * len(df2.index) / 3, slider_data[1] * len(df2.index) / 2]
                           }
             }
         }
     if len(api_id) > 1:
-        # df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
+
         df2 = pd.read_csv(
             'C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\' + api_id[0] + '\\'
             + coin_id + '\\candleStickData_' + api_id[0] + '_' + coin_id + '.csv',
             parse_dates=True)
-        # df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
+
         df2.columns = df2.columns.str.strip()
 
-        fig = go.Figure([go.Scatter(x=df2['closeTimeStamp'], y=df2['high'])])
-        # fig.add_trace(go.Scatter(x=df2['closeTimeStamp'], y=df2['low']))
+        ##Compare Apis###
+
+        # Create graph
+        fig = go.Figure()
+
+        # add different datasets to graph
         a = 0
         for i in api_id:
             df2 = pd.read_csv(
@@ -242,19 +223,18 @@ def update_graph(api_id, coin_id, slider_data):
             a = a + 1
         fig.update_layout(xaxis_rangeslider_visible=False)
         return fig
-        # for i in api_id:
+
+    else:
+        df2 = pd.read_csv(
+            'C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\Binance\\'
+            + coin_id + '\\candleStickData_Binance_' + coin_id + '.csv',
+            parse_dates=True)
+        df2.columns = df2.columns.str.strip()
+        fig1 = go.Figure()
+        fig1.add_trace(go.Scatter(x=df2['closeTimeStamp'], y=df2['high']))
+        return fig1
 
 
-# def setactualvalue(api_id, coin_id):
-#     df2 = pd.read_csv(r'C:\Users\Jakob\PycharmProjects\Coinixa\sl146\ETH_Candle_' + api_id[0] + '.csv',
-#                       parse_dates=True)
-#     df2.columns = df2.columns.str.strip()
-#     return [
-#         html.Div(
-#             #####Zuweisung actual value, 4th row, last entry
-#             html.H4(str(df2.iloc[-1, 3]) + " $")
-#         )
-#     ]
 ########Calllback actual value tab###########
 
 @app.callback(
@@ -264,19 +244,15 @@ def update_graph(api_id, coin_id, slider_data):
 # function setactualvalue builds the actual value tab and coin specific information
 
 def setactualvalue(api_id, coin_id):
-    print(coin_id)
-    print(coin_id)
     df2 = pd.read_csv(
         'C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\' + api_id[0] + '\\'
-                      + coin_id + '\\candleStickData_' + api_id[0] + '_' + coin_id + '.csv',
+        + coin_id + '\\candleStickData_' + api_id[0] + '_' + coin_id + '.csv',
         parse_dates=True)
-        # df2 = pd.read_csv(r'C:\UsersJakob\PycharmProjects\Coinixa\js447/data' + api_id[0] + '\'
-        #               + coin_id[0] + 'candleStickData_' + api_id[0] + '_' + coin_id[0] + '.csv',
-        #               parse_dates=True)
     df2.columns = df2.columns.str.strip()
     return [
         html.Div(
-            #####Zuweisung actual value, 4th row, last entry
+
+            # Zuweisung actual value, 4th row, last entry
             html.H4(str(df2.iloc[-1, 3]) + " $")
         )
     ]
