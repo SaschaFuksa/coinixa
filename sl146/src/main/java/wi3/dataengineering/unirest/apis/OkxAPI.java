@@ -153,8 +153,8 @@ public class OkxAPI implements APIsInterface{
     private ArrayList<CandleStick> getCandleData(String symbol) {
         JSONArray resp = Unirest.get("https://www.okx.com/api/v5/market/candles")
                         .queryString("instId", symbol)
-                        .queryString("bar", "1D")
-                        .queryString("after", "1643670000000")
+                        .queryString("bar", "1H")
+                        .queryString("before", "1643670000000")
                         .asJson()
                         .getBody()
                         .getObject()

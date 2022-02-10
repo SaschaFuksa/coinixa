@@ -125,7 +125,7 @@ public class BinanceAPI implements APIsInterface{
     private ArrayList<CandleStick> getCandleData(String symbol) {
         JSONArray resp = Unirest.get("https://api.binance.com/api/v3/klines")
                         .queryString("symbol", symbol)
-                        .queryString("interval", "1d")
+                        .queryString("interval", "1h")
                         .queryString("startTime", "1643670000000")
                         .asJson()
                         .getBody()

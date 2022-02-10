@@ -122,7 +122,7 @@ public class BiteniumAPI implements APIsInterface{
     private ArrayList<CandleStick> getCandleData(String symbol) {
         JSONArray resp = Unirest.get("https://api.bitenium.com/spotapi/api/klines")
                         .queryString("symbol", symbol)
-                        .queryString("interval", "1d")
+                        .queryString("interval", "1h")
                         .asJson()
                         .getBody()
                         .getArray();
