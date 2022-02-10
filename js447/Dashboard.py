@@ -64,7 +64,7 @@ app.layout = html.Div(
 
                         df_apis['ApiID'],
                         ['Binance'],
-                        
+
                         # inline=False,
                         id='select-api',
                         inputStyle={"margin-right": "50px", "margin-left": "50px"},
@@ -111,9 +111,9 @@ app.layout = html.Div(
                                 max=2,
                                 step=None,
                                 marks={
-                                    0: 'Day 3',
-                                    1: 'Day 2',
-                                    2: 'Day 1'
+                                    0: '72H',
+                                    1: '48H',
+                                    2: '24H'
 
                                 },
                                 value=[0, 2],
@@ -173,6 +173,8 @@ def update_graph(api_id, coin_id, slider_data):
     print(len(api_id))
     print(api_id[0])
 
+#####single api#########
+
     if len(api_id) == 1:
         df2 = pd.read_csv(
             'C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\' + api_id[0] + '\\'
@@ -197,6 +199,9 @@ def update_graph(api_id, coin_id, slider_data):
                           }
             }
         }
+
+    ######multi api########
+
     if len(api_id) > 1:
 
         df2 = pd.read_csv(
