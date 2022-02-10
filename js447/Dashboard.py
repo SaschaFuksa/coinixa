@@ -258,7 +258,7 @@ def setactualvalue(api_id, coin_id):
         html.Div(
 
             # Zuweisung actual value, 4th row, last entry
-            html.H4(str(df2.iloc[-1, 3]) + " $")
+            html.H3(str(df2.iloc[-1, 3]) + " $")
         )
     ]
 
