@@ -29,42 +29,42 @@ public class BiteniumAPI implements APIsInterface{
                     .queryString("symbol", "BTCUSDT")
 				    .asObject(Bitcoin.class)
                     .getBody();
-        coins.put("btc", btc);
+        coins.put("bitcoin", btc);
 
         CoinsInterface ada = new Cardano();
         ada = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
                     .queryString("symbol", "ADAUSDT")
 				    .asObject(Cardano.class)
                     .getBody();
-        coins.put("ada", ada);
+        coins.put("cardano", ada);
 
         CoinsInterface doge = new Dogecoin();
         doge = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
                     .queryString("symbol", "DOGEUSDT")
 				    .asObject(Dogecoin.class)
                     .getBody();
-        coins.put("doge", doge);
+        coins.put("dogecoin", doge);
 
         CoinsInterface eth = new Ethereum();
         eth = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
                     .queryString("symbol", "ADAUSDT")
 				    .asObject(Ethereum.class)
                     .getBody();
-        coins.put("eth", eth);
+        coins.put("ethereum", eth);
 
         CoinsInterface shib = new ShibaInu();
         shib = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
                     .queryString("symbol", "SHIBUSDT")
 				    .asObject(ShibaInu.class)
                     .getBody();
-        coins.put("shib", shib);
+        coins.put("shibainu", shib);
 
         CoinsInterface xtz = new Tezos();
         xtz = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
                     .queryString("symbol", "XTZUSDT")
 				    .asObject(Tezos.class)
                     .getBody();
-        coins.put("xtz", xtz);
+        coins.put("tezos", xtz);
 
         return coins;
 
@@ -104,17 +104,17 @@ public class BiteniumAPI implements APIsInterface{
         HashMap<String, ArrayList<CandleStick>> candlesBitenium = new HashMap<>();
         
         // Candles Bitcoin
-        candlesBitenium.put("btc", getCandleData("BTCUSDT"));
+        candlesBitenium.put("bitcoin", getCandleData("BTCUSDT"));
         // Candles Cardano
-        candlesBitenium.put("ada", getCandleData("ADAUSDT"));
+        candlesBitenium.put("cardano", getCandleData("ADAUSDT"));
         // Candles Dogecoin
-        candlesBitenium.put("doge", getCandleData("DOGEUSDT"));
+        candlesBitenium.put("dogecoin", getCandleData("DOGEUSDT"));
         // Candles Ethereum
-        candlesBitenium.put("doge", getCandleData("ETHUSDT"));
+        candlesBitenium.put("ethereum", getCandleData("ETHUSDT"));
         // Candles ShibaInu
-        candlesBitenium.put("shib", getCandleData("SHIBUSDT"));
+        candlesBitenium.put("shibainu", getCandleData("SHIBUSDT"));
         // Candles Tezos
-        candlesBitenium.put("xtz", getCandleData("XTZUSDT"));
+        candlesBitenium.put("tezos", getCandleData("XTZUSDT"));
 
         return candlesBitenium;
     }
@@ -122,7 +122,7 @@ public class BiteniumAPI implements APIsInterface{
     private ArrayList<CandleStick> getCandleData(String symbol) {
         JSONArray resp = Unirest.get("https://api.bitenium.com/spotapi/api/klines")
                         .queryString("symbol", symbol)
-                        .queryString("interval", "1h")
+                        .queryString("interval", "1d")
                         .asJson()
                         .getBody()
                         .getArray();

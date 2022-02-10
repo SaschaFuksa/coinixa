@@ -49,7 +49,7 @@ public class Database {
         Boolean success = false;
         for (Entry<String, CoinsInterface> entry : coins.entrySet()) {
             try {
-                file = new FileWriter(path + entry.getKey() + "/coin_Value_" + entry.getValue().getCoinName() + ".json");
+                file = new FileWriter(path + entry.getKey() + "/coin_Value_" + api + "_" + entry.getKey() + ".json");
                 file.write(new Gson().toJson(entry.getValue()));
                 file.flush();
                 file.close();

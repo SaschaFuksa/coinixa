@@ -1,13 +1,10 @@
 package wi3.dataengineering;
 
-import java.util.ArrayList;
-
 import wi3.dataengineering.database.Database;
 import wi3.dataengineering.unirest.APIsInterface;
 import wi3.dataengineering.unirest.apis.BinanceAPI;
 import wi3.dataengineering.unirest.apis.BiteniumAPI;
 import wi3.dataengineering.unirest.apis.OkxAPI;
-import wi3.dataengineering.unirest.candlesticks.CandleStick;
 
 public class App 
 {

@@ -7,6 +7,5 @@ import wi3.dataengineering.unirest.candlesticks.CandleStick;
 
 public interface APIsInterface {
     public HashMap<String, CoinsInterface> getCoinData();
-    
     public HashMap<String, ArrayList<CandleStick>> getCandlestickData();
 }

@@ -31,42 +31,42 @@ public class BinanceAPI implements APIsInterface{
                     .queryString("symbol", "BTCUSDT")
 				    .asObject(Bitcoin.class)
                     .getBody();
-        coins.put("btc", btc);
+        coins.put("bitcoin", btc);
 
         CoinsInterface ada = new Cardano();
         ada = Unirest.get("https://api.binance.com/api/v3/ticker/24hr")
                     .queryString("symbol", "ADAUSDT")
 				    .asObject(Cardano.class)
                     .getBody();
-        coins.put("ada",ada);
+        coins.put("cardano",ada);
 
         CoinsInterface doge = new Dogecoin();
         doge = Unirest.get("https://api.binance.com/api/v3/ticker/24hr")
                     .queryString("symbol", "DOGEUSDT")
 				    .asObject(Dogecoin.class)
                     .getBody();
-        coins.put("doge",doge);
+        coins.put("dogecoin",doge);
 
         CoinsInterface eth = new Ethereum();
         eth = Unirest.get("https://api.binance.com/api/v3/ticker/24hr")
                     .queryString("symbol", "ETHUSDT")
 				    .asObject(Ethereum.class)
                     .getBody();
-        coins.put("eth",eth);
+        coins.put("ethereum",eth);
         
         CoinsInterface shib = new ShibaInu();
         shib = Unirest.get("https://api.binance.com/api/v3/ticker/24hr")
                     .queryString("symbol", "SHIBUSDT")
 				    .asObject(ShibaInu.class)
                     .getBody();
-        coins.put("shib", shib);
+        coins.put("shibainu", shib);
 
         CoinsInterface xtz = new Tezos();
         xtz = Unirest.get("https://api.binance.com/api/v3/ticker/24hr")
                     .queryString("symbol", "XTZUSDT")
 				    .asObject(Tezos.class)
                     .getBody();
-        coins.put("xtz", xtz);
+        coins.put("tezos", xtz);
 
         return coins;
 
@@ -107,17 +107,17 @@ public class BinanceAPI implements APIsInterface{
         HashMap<String, ArrayList<CandleStick>> candlesBinance = new HashMap<>();
 
         // Candles Bitcoin
-        candlesBinance.put("btc", getCandleData("BTCUSDT"));
+        candlesBinance.put("bitcoin", getCandleData("BTCUSDT"));
         // Candles Cardano
-        candlesBinance.put("ada",getCandleData("ADAUSDT"));
+        candlesBinance.put("cardano",getCandleData("ADAUSDT"));
         // Candles Dogecoin
-        candlesBinance.put("doge", getCandleData("DOGEUSDT"));
+        candlesBinance.put("dogecoin", getCandleData("DOGEUSDT"));
         // Candles Ethereum
-        candlesBinance.put("eth", getCandleData("ETHUSDT"));
+        candlesBinance.put("ethereum", getCandleData("ETHUSDT"));
         // Candles ShibaInu
-        candlesBinance.put("shib", getCandleData("SHIBUSDT"));
+        candlesBinance.put("shibainu", getCandleData("SHIBUSDT"));
         // Candles Tezos
-        candlesBinance.put("xtz", getCandleData("XTZUSDT"));
+        candlesBinance.put("tezos", getCandleData("XTZUSDT"));
         
         return candlesBinance;
     }
@@ -125,7 +125,7 @@ public class BinanceAPI implements APIsInterface{
     private ArrayList<CandleStick> getCandleData(String symbol) {
         JSONArray resp = Unirest.get("https://api.binance.com/api/v3/klines")
                         .queryString("symbol", symbol)
-                        .queryString("interval", "1h")
+                        .queryString("interval", "1d")
                         .queryString("startTime", "1643670000000")
                         .asJson()
                         .getBody()

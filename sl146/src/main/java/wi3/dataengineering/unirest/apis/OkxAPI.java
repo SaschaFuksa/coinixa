@@ -44,7 +44,7 @@ public class OkxAPI implements APIsInterface{
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface btcCoin = new Bitcoin(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
-        coins.put("btc", btcCoin);
+        coins.put("bitcoin", btcCoin);
 
 
         String ada = Unirest.get("https://www.okx.com/api/v5/market/ticker")
@@ -60,7 +60,7 @@ public class OkxAPI implements APIsInterface{
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface adaCoin = new Cardano(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
-        coins.put("ada", adaCoin);
+        coins.put("cardano", adaCoin);
 
 
         String doge = Unirest.get("https://www.okx.com/api/v5/market/ticker")
@@ -76,7 +76,7 @@ public class OkxAPI implements APIsInterface{
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface dogeCoin = new Dogecoin(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
-        coins.put("doge", dogeCoin);
+        coins.put("dogecoin", dogeCoin);
 
 
         String eth = Unirest.get("https://www.okx.com/api/v5/market/ticker")
@@ -92,7 +92,7 @@ public class OkxAPI implements APIsInterface{
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface ethCoin = new Ethereum(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
-        coins.put("eth", ethCoin);
+        coins.put("ethereum", ethCoin);
 
 
         String shib = Unirest.get("https://www.okx.com/api/v5/market/ticker")
@@ -108,7 +108,7 @@ public class OkxAPI implements APIsInterface{
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface shibCoin = new ShibaInu(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
-        coins.put("shib", shibCoin);     
+        coins.put("shibainu", shibCoin);     
         
 
         String xtz = Unirest.get("https://www.okx.com/api/v5/market/ticker")
@@ -124,7 +124,7 @@ public class OkxAPI implements APIsInterface{
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface xtzCoin = new Tezos(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
-        coins.put("xtz", xtzCoin);   
+        coins.put("tezos", xtzCoin);   
 
        return coins;
     }
@@ -135,17 +135,17 @@ public class OkxAPI implements APIsInterface{
         HashMap<String, ArrayList<CandleStick>> candlesOkx = new HashMap<>();
         
         // Candles Bitcoin
-        candlesOkx.put("btc", getCandleData("BTC-USDT"));
+        candlesOkx.put("bitcoin", getCandleData("BTC-USDT"));
         // Candles Cardano
-        candlesOkx.put("ada", getCandleData("ADA-USDT"));
+        candlesOkx.put("cardano", getCandleData("ADA-USDT"));
         // Candles Dogecoin
-        candlesOkx.put("doge", getCandleData("DOGE-USDT"));
+        candlesOkx.put("dogecoin", getCandleData("DOGE-USDT"));
         // Candles Ethereum
-        candlesOkx.put("eth", getCandleData("ETH-USDT"));
+        candlesOkx.put("ethereum", getCandleData("ETH-USDT"));
         // Candles ShibaInu
-        candlesOkx.put("shib", getCandleData("SHIB-USDT"));
+        candlesOkx.put("shibainu", getCandleData("SHIB-USDT"));
         // Candles Tezos
-        candlesOkx.put("xtz", getCandleData("XTZ-USDT"));
+        candlesOkx.put("tezos", getCandleData("XTZ-USDT"));
 
         return candlesOkx;
     }
@@ -153,7 +153,7 @@ public class OkxAPI implements APIsInterface{
     private ArrayList<CandleStick> getCandleData(String symbol) {
         JSONArray resp = Unirest.get("https://www.okx.com/api/v5/market/candles")
                         .queryString("instId", symbol)
-                        .queryString("bar", "1H")
+                        .queryString("bar", "1D")
                         .queryString("after", "1643670000000")
                         .asJson()
                         .getBody()
