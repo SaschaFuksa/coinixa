@@ -3,6 +3,7 @@ package wi3.dataengineering.unirest.apis;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.google.gson.Gson;
 
@@ -21,55 +22,51 @@ import wi3.dataengineering.unirest.coins.Tezos;
 public class BiteniumAPI implements APIsInterface{
 
     @Override
-    public ArrayList<CoinsInterface> getCoinData() {
-        // TODO Auto-generated method stub
-        ArrayList <CoinsInterface> coins = new ArrayList<CoinsInterface>();
+    public HashMap<String, CoinsInterface> getCoinData() {
+        HashMap<String, CoinsInterface> coins = new HashMap<>();
         CoinsInterface btc = new Bitcoin();
         btc = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
                     .queryString("symbol", "BTCUSDT")
 				    .asObject(Bitcoin.class)
                     .getBody();
-        coins.add(btc);
+        coins.put("btc", btc);
 
         CoinsInterface ada = new Cardano();
         ada = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
                     .queryString("symbol", "ADAUSDT")
 				    .asObject(Cardano.class)
                     .getBody();
-        coins.add(ada);
+        coins.put("ada", ada);
 
         CoinsInterface doge = new Dogecoin();
         doge = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
                     .queryString("symbol", "DOGEUSDT")
 				    .asObject(Dogecoin.class)
                     .getBody();
-        coins.add(doge);
+        coins.put("doge", doge);
 
         CoinsInterface eth = new Ethereum();
         eth = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
                     .queryString("symbol", "ADAUSDT")
 				    .asObject(Ethereum.class)
                     .getBody();
-        coins.add(eth);
+        coins.put("eth", eth);
 
         CoinsInterface shib = new ShibaInu();
         shib = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
                     .queryString("symbol", "SHIBUSDT")
 				    .asObject(ShibaInu.class)
                     .getBody();
-        coins.add(shib);
+        coins.put("shib", shib);
 
         CoinsInterface xtz = new Tezos();
         xtz = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
                     .queryString("symbol", "XTZUSDT")
 				    .asObject(Tezos.class)
                     .getBody();
-        coins.add(xtz);
+        coins.put("xtz", xtz);
 
-        //export of demo data
-        //do not forget to delete
-        exportCoin("sl146/BTC_Bitenium.json", btc);
-        exportCoin("sl146/ETH_Bitenium.json", eth);
+        return coins;
 
         /* CoinsInterface ctk = new CertiK();
         ctk = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
@@ -100,39 +97,26 @@ public class BiteniumAPI implements APIsInterface{
         coins.add(rari);
 
         */
-        return coins;
     }
-
+    
     @Override
-    public void getCoinHistory() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public ArrayList<ArrayList<CandleStick>> getCandlestickData() {
-        // TODO Auto-generated method stub
-        ArrayList<ArrayList<CandleStick>> candlesBinance = new ArrayList<>();
+    public HashMap<String, ArrayList<CandleStick>> getCandlestickData() {
+        HashMap<String, ArrayList<CandleStick>> candlesBitenium = new HashMap<>();
         
         // Candles Bitcoin
-        candlesBinance.add(getCandleData("BTCUSDT"));
+        candlesBitenium.put("btc", getCandleData("BTCUSDT"));
         // Candles Cardano
-        candlesBinance.add(getCandleData("ADAUSDT"));
+        candlesBitenium.put("ada", getCandleData("ADAUSDT"));
         // Candles Dogecoin
-        candlesBinance.add(getCandleData("DOGEUSDT"));
+        candlesBitenium.put("doge", getCandleData("DOGEUSDT"));
         // Candles Ethereum
-        candlesBinance.add(getCandleData("ETHUSDT"));
+        candlesBitenium.put("doge", getCandleData("ETHUSDT"));
         // Candles ShibaInu
-        candlesBinance.add(getCandleData("SHIBUSDT"));
+        candlesBitenium.put("shib", getCandleData("SHIBUSDT"));
         // Candles Tezos
-        candlesBinance.add(getCandleData("XTZUSDT"));
+        candlesBitenium.put("xtz", getCandleData("XTZUSDT"));
 
-        //testing exports
-        //do not forget to delete
-        exportCandle(getCandleData("BTCUSDT"), "sl146/BTC_Candle_Bitenium.csv");
-        exportCandle(getCandleData("ETHUSDT"), "sl146/ETH_Candle_Bitenium.csv");
-
-        return candlesBinance;
+        return candlesBitenium;
     }
     
     private ArrayList<CandleStick> getCandleData(String symbol) {

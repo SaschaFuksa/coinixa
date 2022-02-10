@@ -2,6 +2,7 @@ package wi3.dataengineering;
 
 import java.util.ArrayList;
 
+import wi3.dataengineering.database.Database;
 import wi3.dataengineering.unirest.APIsInterface;
 import wi3.dataengineering.unirest.apis.BinanceAPI;
 import wi3.dataengineering.unirest.apis.BiteniumAPI;
@@ -44,17 +45,21 @@ public class App
             }   
         }  */
 
-        APIsInterface candle = new BiteniumAPI();
-        candle.getCoinData();
-        candle.getCandlestickData();
+        Database export = new Database();
 
-        APIsInterface candle2 = new BinanceAPI();
-        candle2.getCoinData();
-        candle2.getCandlestickData();
+        APIsInterface candle = new BinanceAPI();
+        System.out.println("Ergbenis Export CandleSticks: -- " + export.exportCandle(candle.getCandlestickData(), "binance"));
+        System.out.println("Ergbenis Export Coinvalue: -- " + export.exportCoin(candle.getCoinData(), "binance"));
+
+        APIsInterface candle2 = new BiteniumAPI();
+        System.out.println("Ergbenis Export CandleSticks: -- " + export.exportCandle(candle2.getCandlestickData(), "bitenium"));
+        System.out.println("Ergbenis Export Coinvalue: -- " + export.exportCoin(candle2.getCoinData(), "bitenium"));
 
         APIsInterface candle3 = new OkxAPI();
-        candle3.getCoinData();
-        candle3.getCandlestickData();
+        System.out.println("Ergbenis Export CandleSticks: -- " + export.exportCandle(candle3.getCandlestickData(), "okx"));
+        System.out.println("Ergbenis Export Coinvalue: -- " + export.exportCoin(candle3.getCoinData(), "okx"));
+
+
 
         /* for (ArrayList<CandleStick> candleList : candle.getCandlestickData()) {
             for (CandleStick candleStick : candleList) {

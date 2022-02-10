@@ -3,6 +3,7 @@ package wi3.dataengineering.unirest.apis;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.google.gson.Gson;
 
@@ -22,55 +23,50 @@ import wi3.dataengineering.unirest.coins.Tezos;
 public class BinanceAPI implements APIsInterface{
 
     @Override
-    public ArrayList<CoinsInterface> getCoinData() {
+    public HashMap<String, CoinsInterface> getCoinData() {
         // TODO Auto-generated method stub
-        ArrayList <CoinsInterface> coins = new ArrayList<CoinsInterface>();
+        HashMap<String, CoinsInterface> coins = new HashMap<>();
         CoinsInterface btc = new Bitcoin();
         btc = Unirest.get("https://api.binance.com/api/v3/ticker/24hr")
                     .queryString("symbol", "BTCUSDT")
 				    .asObject(Bitcoin.class)
                     .getBody();
-        coins.add(btc);
+        coins.put("btc", btc);
 
         CoinsInterface ada = new Cardano();
         ada = Unirest.get("https://api.binance.com/api/v3/ticker/24hr")
                     .queryString("symbol", "ADAUSDT")
 				    .asObject(Cardano.class)
                     .getBody();
-        coins.add(ada);
+        coins.put("ada",ada);
 
         CoinsInterface doge = new Dogecoin();
         doge = Unirest.get("https://api.binance.com/api/v3/ticker/24hr")
                     .queryString("symbol", "DOGEUSDT")
 				    .asObject(Dogecoin.class)
                     .getBody();
-        coins.add(doge);
+        coins.put("doge",doge);
 
         CoinsInterface eth = new Ethereum();
         eth = Unirest.get("https://api.binance.com/api/v3/ticker/24hr")
                     .queryString("symbol", "ETHUSDT")
 				    .asObject(Ethereum.class)
                     .getBody();
-        coins.add(eth);
+        coins.put("eth",eth);
         
         CoinsInterface shib = new ShibaInu();
         shib = Unirest.get("https://api.binance.com/api/v3/ticker/24hr")
                     .queryString("symbol", "SHIBUSDT")
 				    .asObject(ShibaInu.class)
                     .getBody();
-        coins.add(shib);
+        coins.put("shib", shib);
 
         CoinsInterface xtz = new Tezos();
         xtz = Unirest.get("https://api.binance.com/api/v3/ticker/24hr")
                     .queryString("symbol", "XTZUSDT")
 				    .asObject(Tezos.class)
                     .getBody();
-        coins.add(xtz);
-
-        //export of demo data
-        //do not forget to delete
-        exportCoin("sl146/BTC_Binance.json", btc);
-        exportCoin("sl146/ETH_Binance.json", eth);
+        coins.put("xtz", xtz);
 
         return coins;
 
@@ -106,33 +102,23 @@ public class BinanceAPI implements APIsInterface{
     }
 
     @Override
-    public void getCoinHistory() {
-        // TODO Auto-generated method stub
-        
-    }
+    public HashMap<String, ArrayList<CandleStick>> getCandlestickData() {
+        //ArrayList<ArrayList<CandleStick>> candlesBinance = new ArrayList<>();
+        HashMap<String, ArrayList<CandleStick>> candlesBinance = new HashMap<>();
 
-    @Override
-    public ArrayList<ArrayList<CandleStick>> getCandlestickData() {
-        ArrayList<ArrayList<CandleStick>> candlesBinance = new ArrayList<>();
-        
         // Candles Bitcoin
-        candlesBinance.add(getCandleData("BTCUSDT"));
+        candlesBinance.put("btc", getCandleData("BTCUSDT"));
         // Candles Cardano
-        candlesBinance.add(getCandleData("ADAUSDT"));
+        candlesBinance.put("ada",getCandleData("ADAUSDT"));
         // Candles Dogecoin
-        candlesBinance.add(getCandleData("DOGEUSDT"));
+        candlesBinance.put("doge", getCandleData("DOGEUSDT"));
         // Candles Ethereum
-        candlesBinance.add(getCandleData("ETHUSDT"));
+        candlesBinance.put("eth", getCandleData("ETHUSDT"));
         // Candles ShibaInu
-        candlesBinance.add(getCandleData("SHIBUSDT"));
+        candlesBinance.put("shib", getCandleData("SHIBUSDT"));
         // Candles Tezos
-        candlesBinance.add(getCandleData("XTZUSDT"));
-
-        //testing exports
-        //do not forget to delete
-        exportCandle(getCandleData("BTCUSDT"), "sl146/BTC_Candle_Binance.csv");
-        exportCandle(getCandleData("ETHUSDT"), "sl146/ETH_Candle_Binance.csv");
-
+        candlesBinance.put("xtz", getCandleData("XTZUSDT"));
+        
         return candlesBinance;
     }
 

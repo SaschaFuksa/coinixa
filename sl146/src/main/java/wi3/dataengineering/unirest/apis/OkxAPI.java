@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import com.google.gson.Gson;
 
@@ -23,12 +24,11 @@ import wi3.dataengineering.unirest.coins.Tezos;
 public class OkxAPI implements APIsInterface{
 
     @Override
-    public ArrayList<CoinsInterface> getCoinData() {
+    public HashMap<String, CoinsInterface> getCoinData() {
         // create list for all coin objects
-        ArrayList <CoinsInterface> coins = new ArrayList<CoinsInterface>();
+        HashMap <String, CoinsInterface> coins = new HashMap<>();
         // create OkxCoinObject which will be used as adapter object
         OkxCoinObject okx = new OkxCoinObject();
-
 
         String btc = Unirest.get("https://www.okx.com/api/v5/market/ticker")
                     .queryString("instId", "BTC-USDT")
@@ -44,7 +44,7 @@ public class OkxAPI implements APIsInterface{
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface btcCoin = new Bitcoin(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
-        coins.add(btcCoin);
+        coins.put("btc", btcCoin);
 
 
         String ada = Unirest.get("https://www.okx.com/api/v5/market/ticker")
@@ -60,7 +60,7 @@ public class OkxAPI implements APIsInterface{
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface adaCoin = new Cardano(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
-        coins.add(adaCoin);
+        coins.put("ada", adaCoin);
 
 
         String doge = Unirest.get("https://www.okx.com/api/v5/market/ticker")
@@ -76,7 +76,7 @@ public class OkxAPI implements APIsInterface{
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface dogeCoin = new Dogecoin(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
-        coins.add(dogeCoin);
+        coins.put("doge", dogeCoin);
 
 
         String eth = Unirest.get("https://www.okx.com/api/v5/market/ticker")
@@ -92,7 +92,7 @@ public class OkxAPI implements APIsInterface{
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface ethCoin = new Ethereum(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
-        coins.add(ethCoin);
+        coins.put("eth", ethCoin);
 
 
         String shib = Unirest.get("https://www.okx.com/api/v5/market/ticker")
@@ -108,7 +108,7 @@ public class OkxAPI implements APIsInterface{
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface shibCoin = new ShibaInu(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
-        coins.add(shibCoin);     
+        coins.put("shib", shibCoin);     
         
 
         String xtz = Unirest.get("https://www.okx.com/api/v5/market/ticker")
@@ -124,46 +124,30 @@ public class OkxAPI implements APIsInterface{
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface xtzCoin = new Tezos(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
-        coins.add(xtzCoin);   
-
-        //export of demo data
-        //do not forget to delete
-        exportCoin("sl146/BTC_OKX.json", btcCoin);
-        exportCoin("sl146/ETH_OKX.json", ethCoin);
+        coins.put("xtz", xtzCoin);   
 
        return coins;
     }
 
     @Override
-    public void getCoinHistory() {
-        // TODO Auto-generated method stub 
-    }
-
-
-    @Override
-    public ArrayList<ArrayList<CandleStick>> getCandlestickData() {
+    public HashMap<String, ArrayList<CandleStick>> getCandlestickData() {
         // TODO Auto-generated method stub
-        ArrayList<ArrayList<CandleStick>> candlesBinance = new ArrayList<>();
+        HashMap<String, ArrayList<CandleStick>> candlesOkx = new HashMap<>();
         
         // Candles Bitcoin
-        candlesBinance.add(getCandleData("BTC-USDT"));
+        candlesOkx.put("btc", getCandleData("BTC-USDT"));
         // Candles Cardano
-        candlesBinance.add(getCandleData("ADA-USDT"));
+        candlesOkx.put("ada", getCandleData("ADA-USDT"));
         // Candles Dogecoin
-        candlesBinance.add(getCandleData("DOGE-USDT"));
+        candlesOkx.put("doge", getCandleData("DOGE-USDT"));
         // Candles Ethereum
-        candlesBinance.add(getCandleData("ETH-USDT"));
+        candlesOkx.put("eth", getCandleData("ETH-USDT"));
         // Candles ShibaInu
-        candlesBinance.add(getCandleData("SHIB-USDT"));
+        candlesOkx.put("shib", getCandleData("SHIB-USDT"));
         // Candles Tezos
-        candlesBinance.add(getCandleData("XTZ-USDT"));
+        candlesOkx.put("xtz", getCandleData("XTZ-USDT"));
 
-        //testing exports
-        //do not forget to delete
-        exportCandle(getCandleData("BTCUSDT"), "sl146/BTC_Candle_OKX.csv");
-        exportCandle(getCandleData("ETHUSDT"), "sl146/ETH_Candle_OKX.csv");
-
-        return candlesBinance;
+        return candlesOkx;
     }
     
     private ArrayList<CandleStick> getCandleData(String symbol) {
