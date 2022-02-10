@@ -12,7 +12,8 @@ from dash import Output, Input
 
 # df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv')
 # df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
-df3 = pd.read_csv(r'C:\Users\Jakob\Downloads\coins.csv')
+df_coins = pd.read_csv(r'C:\Users\Jakob\PycharmProjects\Coinixa\js447\Data\UI\coins.csv')
+df_apis = pd.read_csv(r'C:\Users\Jakob\PycharmProjects\Coinixa\js447\Data\UI\apis.csv')
 # coins = pd.read_csv()
 
 # fig = go.Figure(data=[go.Candlestick(x=df['Date'],
@@ -80,7 +81,7 @@ app.layout = html.Div(
                 html.Div(
                     dcc.Checklist(
 
-                        ['Binance', 'OKX', 'Bitenium'],
+                        df_apis['ApiID'],
                         ['Binance'],
                         # inline=False,
                         id='select-api',
@@ -94,7 +95,7 @@ app.layout = html.Div(
 
             dbc.Col([
                 html.H1('Coin'),
-                dcc.Dropdown(df3['CoinID'], 'Bitcoin', id='coin-dropdown'),
+                dcc.Dropdown(df_coins['CoinID'], 'Bitcoin', id='coin-dropdown'),
             ], className='card-tab card', width=True),
 
             dbc.Col([
@@ -125,16 +126,15 @@ app.layout = html.Div(
                         html.Div([
                             dcc.RangeSlider(
                                 min=0,
-                                max=4,
+                                max=2,
                                 step=None,
                                 marks={
-                                    0: '02/14/2022',
-                                    1: '02/15/2022',
-                                    2: '02/16/2022',
-                                    3: '02/17/2022',
-                                    4: '02/18/2022'
+                                    0: 'Day 3',
+                                    1: 'Day 2',
+                                    2: 'Day 1'
+
                                 },
-                                value=[0, 4],
+                                value=[0, 2],
                                 id='slider'
                             )
                         ]),
@@ -194,8 +194,13 @@ def update_graph(api_id, coin_id, slider_data):
     print(api_id[0])
 
     if len(api_id) == 1:
-        df2 = pd.read_csv(r'C:\Users\Jakob\PycharmProjects\Coinixa\sl146\ETH_Candle_' + api_id[0] + '.csv',
-                          parse_dates=True)
+        # df2 = pd.read_csv(r'C:/UsersJakob/PycharmProjects/Coinixa/js447/data/' + api_id[0] + '/'
+        #                   + coin_id[0] + 'candleStickData_' + api_id[0] + '_' + coin_id[0] + '.csv',
+        #                   parse_dates=True)
+        df2 = pd.read_csv(
+            'C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\' + api_id[0] + '\\'
+            + coin_id + '\\candleStickData_' + api_id[0] + '_' + coin_id + '.csv',
+            parse_dates=True)
         df2.columns = df2.columns.str.strip()
         return {'data': [{
             'x': df2['closeTimeStamp'],
@@ -209,24 +214,27 @@ def update_graph(api_id, coin_id, slider_data):
                 'margin': {'b': 0, 'r': 10, 'l': 10, 't': 0},
                 'legend': {'x': 0},
                 # 'xaxis_rangeslider_visible': 'False',
-                'xaxis': {'range': [slider_data[0] * 53, slider_data[1] * 53]
+                'xaxis': {'range': [slider_data[0] * 90, slider_data[1] * 90]
                           }
             }
         }
     if len(api_id) > 1:
-        #df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
-        df2 = pd.read_csv(r'C:\Users\Jakob\PycharmProjects\Coinixa\sl146\ETH_Candle_' + api_id[0] + '.csv',
-                           parse_dates=True)
-        #df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
+        # df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
+        df2 = pd.read_csv(
+            'C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\' + api_id[0] + '\\'
+            + coin_id + '\\candleStickData_' + api_id[0] + '_' + coin_id + '.csv',
+            parse_dates=True)
+        # df2 = pd.read_csv(r'C:\Users\Jakob\Downloads\BinanceCandleETHUSDT.csv', parse_dates=True)
         df2.columns = df2.columns.str.strip()
 
         fig = go.Figure([go.Scatter(x=df2['closeTimeStamp'], y=df2['high'])])
         # fig.add_trace(go.Scatter(x=df2['closeTimeStamp'], y=df2['low']))
         a = 0
         for i in api_id:
-
-            df2 = pd.read_csv(r'C:\Users\Jakob\PycharmProjects\Coinixa\sl146\ETH_Candle_' + api_id[a] + '.csv',
-                              parse_dates=True)
+            df2 = pd.read_csv(
+                'C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\' + api_id[0] + '\\'
+                + coin_id + '\\candleStickData_' + api_id[0] + '_' + coin_id + '.csv',
+                parse_dates=True)
             df2.columns = df2.columns.str.strip()
             fig.add_trace(go.Scatter(x=df2['closeTimeStamp'], y=df2['high']))
             a = a + 1
@@ -254,8 +262,15 @@ def update_graph(api_id, coin_id, slider_data):
 # function setactualvalue builds the actual value tab and coin specific information
 
 def setactualvalue(api_id, coin_id):
-    df2 = pd.read_csv(r'C:\Users\Jakob\PycharmProjects\Coinixa\sl146\ETH_Candle_' + api_id[0] + '.csv',
-                      parse_dates=True)
+    print(coin_id)
+    print(coin_id)
+    df2 = pd.read_csv(
+        'C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\' + api_id[0] + '\\'
+                      + coin_id + '\\candleStickData_' + api_id[0] + '_' + coin_id + '.csv',
+        parse_dates=True)
+        # df2 = pd.read_csv(r'C:\UsersJakob\PycharmProjects\Coinixa\js447/data' + api_id[0] + '\'
+        #               + coin_id[0] + 'candleStickData_' + api_id[0] + '_' + coin_id[0] + '.csv',
+        #               parse_dates=True)
     df2.columns = df2.columns.str.strip()
     return [
         html.Div(
