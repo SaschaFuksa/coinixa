@@ -167,5 +167,15 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.apache.beam:beam-sdks-java-harness:2.31.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.beam:beam-model-fn-execution:2.31.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.beam:beam-sdks-java-fn-execution:2.31.0" level="project" />
+    <orderEntry type="library" name="mysql:mysql-connector-java:8.0.27" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/HikariCP-5.0.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
