@@ -201,7 +201,9 @@ def update_graph(api_id, coin_id, slider_data):
             'C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\' + api_id[0] + '\\'
             + coin_id + '\\candleStickData_' + api_id[0] + '_' + coin_id + '.csv',
             parse_dates=True)
+
         df2.columns = df2.columns.str.strip()
+        print(len(df2.index))
         return {'data': [{
             'x': df2['closeTimeStamp'],
             'open': df2['open'],
@@ -214,7 +216,7 @@ def update_graph(api_id, coin_id, slider_data):
                 'margin': {'b': 0, 'r': 10, 'l': 10, 't': 0},
                 'legend': {'x': 0},
                 # 'xaxis_rangeslider_visible': 'False',
-                'xaxis': {'range': [slider_data[0] * 90, slider_data[1] * 90]
+                'xaxis': {'range': [slider_data[0] * len(df2.index)/2, slider_data[1] * len(df2.index)/2]
                           }
             }
         }
