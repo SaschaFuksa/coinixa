@@ -1,5 +1,11 @@
-package wi3.dataengineering.unirest;
+package wi3.dataengineering.unirest.coins;
 
+/**
+ * adapter object
+ * okx api return different data as binance or bitenium
+ * used to map okx data 
+ * stored data from this class is used to construct coin data objects
+ */
 public class OkxCoinObject {
     private String instId;
     private float last;

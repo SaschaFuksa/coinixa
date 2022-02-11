@@ -2,6 +2,11 @@ package wi3.dataengineering.unirest.coins;
 
 import wi3.dataengineering.unirest.CoinsInterface;
 
+/**
+ * coin object
+ * used to map received coin data to an object
+ * stores all relevant information about a coin
+ */
 public class PancakeSwap implements CoinsInterface{
     private String symbol;
     private float priceChange;

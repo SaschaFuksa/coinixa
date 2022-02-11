@@ -11,6 +11,10 @@ import com.google.gson.Gson;
 import wi3.dataengineering.unirest.CoinsInterface;
 import wi3.dataengineering.unirest.candlesticks.CandleStick;
 
+/**
+ * classes for exporting coin data.
+ * coins and candlesticks will be given as parameter.
+ */
 public class Database {
     public Database() {
     }
@@ -18,6 +22,7 @@ public class Database {
     public Boolean exportCandle(HashMap<String, ArrayList<CandleStick>> candles, String api) {
         FileWriter file;
         
+        //change path for google cloud deployment
         String path = "C:/Data/" + api + "/";
 
         Boolean success = false;
@@ -36,8 +41,6 @@ public class Database {
                     e.printStackTrace();
                 }
             }
-        
-        //return candlesBinance;
         return success;
     }
 
@@ -58,8 +61,7 @@ public class Database {
             } catch (IOException e) {
                 e.printStackTrace();
             } 
-        }
-        
+        }  
     return success;
     }
 }

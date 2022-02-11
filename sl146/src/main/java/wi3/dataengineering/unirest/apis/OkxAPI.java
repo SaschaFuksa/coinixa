@@ -12,24 +12,38 @@ import kong.unirest.Unirest;
 import kong.unirest.json.JSONArray;
 import wi3.dataengineering.unirest.APIsInterface;
 import wi3.dataengineering.unirest.CoinsInterface;
-import wi3.dataengineering.unirest.OkxCoinObject;
 import wi3.dataengineering.unirest.candlesticks.CandleStick;
 import wi3.dataengineering.unirest.coins.Bitcoin;
 import wi3.dataengineering.unirest.coins.Cardano;
 import wi3.dataengineering.unirest.coins.Dogecoin;
 import wi3.dataengineering.unirest.coins.Ethereum;
+import wi3.dataengineering.unirest.coins.OkxCoinObject;
 import wi3.dataengineering.unirest.coins.ShibaInu;
 import wi3.dataengineering.unirest.coins.Tezos;
 
+/**
+ * responsible for rest-request, rest-responses and mapping
+ * class used for sending rest-requests to the bitenium public api
+ * rest-response with coin data is mapped to coin object and put into coins hashmap
+ * rest-response with candlestick data is mapped to candlestick object and put into candlestick hashmap
+ * okx returns different coin data 
+ * use of adapter class to map incoming data to a object
+ * data from adapter object is used to construct coin object (missing values set to 0.0f)
+ */
 public class OkxAPI implements APIsInterface{
 
     @Override
     public HashMap<String, CoinsInterface> getCoinData() {
-        // create list for all coin objects
+        // all coin objects will be stored and returned in this hashmap
         HashMap <String, CoinsInterface> coins = new HashMap<>();
+        
         // create OkxCoinObject which will be used as adapter object
         OkxCoinObject okx = new OkxCoinObject();
 
+        // get coin data through rest-request and map it to the okxcoinobject object
+        // use data from okxcoinobjekt to construct coin object
+        // put coin object into hashmap with coinname as key
+        // repeat for each coin
         String btc = Unirest.get("https://www.okx.com/api/v5/market/ticker")
                     .queryString("instId", "BTC-USDT")
                     .asJson()
@@ -37,15 +51,13 @@ public class OkxAPI implements APIsInterface{
                     .getObject()
                     .getJSONArray("data")
                     .getJSONObject(0)
-                    .toString();
-        
+                    .toString();       
         Gson gson = new Gson();
         okx = gson.fromJson(btc, OkxCoinObject.class);
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface btcCoin = new Bitcoin(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
         coins.put("bitcoin", btcCoin);
-
 
         String ada = Unirest.get("https://www.okx.com/api/v5/market/ticker")
                     .queryString("instId", "ADA-USDT")
@@ -54,14 +66,12 @@ public class OkxAPI implements APIsInterface{
                     .getObject()
                     .getJSONArray("data")
                     .getJSONObject(0)
-                    .toString();
-        
+                    .toString();      
         okx = gson.fromJson(ada, OkxCoinObject.class);
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface adaCoin = new Cardano(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
         coins.put("cardano", adaCoin);
-
 
         String doge = Unirest.get("https://www.okx.com/api/v5/market/ticker")
                     .queryString("instId", "DOGE-USDT")
@@ -70,8 +80,7 @@ public class OkxAPI implements APIsInterface{
                     .getObject()
                     .getJSONArray("data")
                     .getJSONObject(0)
-                    .toString();
-        
+                    .toString();       
         okx = gson.fromJson(doge, OkxCoinObject.class);
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
@@ -86,8 +95,7 @@ public class OkxAPI implements APIsInterface{
                     .getObject()
                     .getJSONArray("data")
                     .getJSONObject(0)
-                    .toString();
-        
+                    .toString();       
         okx = gson.fromJson(eth, OkxCoinObject.class);
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
@@ -102,8 +110,7 @@ public class OkxAPI implements APIsInterface{
                     .getObject()
                     .getJSONArray("data")
                     .getJSONObject(0)
-                    .toString();
-        
+                    .toString();       
         okx = gson.fromJson(shib, OkxCoinObject.class);
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
@@ -118,22 +125,24 @@ public class OkxAPI implements APIsInterface{
                     .getObject()
                     .getJSONArray("data")
                     .getJSONObject(0)
-                    .toString();
-        
+                    .toString();       
         okx = gson.fromJson(xtz, OkxCoinObject.class);
         // create coin object with okx data
         // missing data will be constructed with zero (0.0f)
         CoinsInterface xtzCoin = new Tezos(okx.getInstId(), 0.0f, (float) 0.0f, 0.0f, okx.getLast(), okx.getOpen24h(), okx.getHigh24h(), okx.getVolCcy24h());
         coins.put("tezos", xtzCoin);   
 
-       return coins;
+    // return hashmap with all coin objects
+    return coins;
     }
 
     @Override
     public HashMap<String, ArrayList<CandleStick>> getCandlestickData() {
-        // TODO Auto-generated method stub
+        // candlestick data of all coins will be saved in this hashmap
         HashMap<String, ArrayList<CandleStick>> candlesOkx = new HashMap<>();
         
+        // putting each candlestick data into the hashmap
+        // using coinname as key
         // Candles Bitcoin
         candlesOkx.put("bitcoin", getCandleData("BTC-USDT"));
         // Candles Cardano
@@ -150,7 +159,16 @@ public class OkxAPI implements APIsInterface{
         return candlesOkx;
     }
     
+    /**
+     * get candlestick data from public api through rest-request
+     * candlestick data is in 1h timeframes 
+     * api returns candlestick data in one big json-array
+     * this methods maps the received json-array into candlestick arrays and puts them into a arraylist
+     * @param symbol symbol of the coin to get the data for
+     * @return arraylist with candlestick data
+     */
     private ArrayList<CandleStick> getCandleData(String symbol) {
+        // get data from api
         JSONArray resp = Unirest.get("https://www.okx.com/api/v5/market/candles")
                         .queryString("instId", symbol)
                         .queryString("bar", "1H")
@@ -160,10 +178,15 @@ public class OkxAPI implements APIsInterface{
                         .getObject()
                         .getJSONArray("data");
 
-        ArrayList<CandleStick> binanceCandlesList = new ArrayList<CandleStick>();
+        // create arraylist with received candlestick data
+        // received data is in one big json-array with nested candlestick arrays
+        ArrayList<CandleStick> okxCandlesList = new ArrayList<CandleStick>();
+
+        // loop through all nested arrays
         for (int i=0; i < resp.length(); i++) {
             JSONArray candle = (JSONArray) resp.get(i);
 
+            // map nested array to candlestick object
             long openTime = candle.getLong(0);
             float open = candle.getFloat(1);
             float high = candle.getFloat(2);
@@ -172,21 +195,18 @@ public class OkxAPI implements APIsInterface{
             float volume = candle.getFloat(5);
             float quoteAssetVolume = candle.getFloat(6);
             long closeTime = candle.getLong(0) + 3600;
-            /*
-            long numberOfTrades = candle.getInt(8);
-            float takerBuyBase = candle.getFloat(9);
-            float takerBuyQuote = candle.getFloat(10);
-            float ignore = candle.getFloat(11); */
 
             CandleStick candleData = new CandleStick(openTime, open, high, low, close, volume, closeTime, quoteAssetVolume, 0, 0, 0, 0);
-            binanceCandlesList.add(candleData);
+            okxCandlesList.add(candleData);
         }
-
-        Collections.reverse(binanceCandlesList);
-        return binanceCandlesList;
+        // okx api returns candlestick data in reversed order
+        // reverse order of the arraylist
+        Collections.reverse(okxCandlesList);
+        //return arraylist with candlestick data
+        return okxCandlesList;
     }
 
-    // hilfsmethode export csv
+    //export method used for testing
     private void exportCandle(ArrayList<CandleStick> candles, String filename) {
         FileWriter file; 
             try {
@@ -203,6 +223,7 @@ public class OkxAPI implements APIsInterface{
             }
     }
 
+    //export method used for testing
     private void exportCoin(String filename, CoinsInterface coin) {
         FileWriter file; 
         try {

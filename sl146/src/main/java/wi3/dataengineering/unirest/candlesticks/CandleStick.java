@@ -2,6 +2,10 @@ package wi3.dataengineering.unirest.candlesticks;
 
 import wi3.dataengineering.unirest.hilfsklassen.UnixToTimeStamp;
 
+/**
+ * candlestick object
+ * used for mapping received candlestick data to an object
+ */
 public class CandleStick{
     private long openTime;
     private String openTimeStamp;

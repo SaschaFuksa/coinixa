@@ -19,13 +19,23 @@ import wi3.dataengineering.unirest.coins.Ethereum;
 import wi3.dataengineering.unirest.coins.ShibaInu;
 import wi3.dataengineering.unirest.coins.Tezos;
 
-
+/**
+ * responsible for rest-request, rest-responses and mapping
+ * class used for sending rest-requests to the binance public api
+ * rest-response with coin data is mapped to coin object and put into coins hashmap
+ * rest-response with candlestick data is mapped to candlestick object and put into candlestick hashmap
+ */
 public class BinanceAPI implements APIsInterface{
 
     @Override
     public HashMap<String, CoinsInterface> getCoinData() {
-        // TODO Auto-generated method stub
+        // all coin objects will be stored and returned in this hashmap
         HashMap<String, CoinsInterface> coins = new HashMap<>();
+
+        // initializing coin object
+        // get coin data through rest-request and map it to the coin object
+        // put coin object into hashmap with coinname as key
+        // repeat for each coin
         CoinsInterface btc = new Bitcoin();
         btc = Unirest.get("https://api.binance.com/api/v3/ticker/24hr")
                     .queryString("symbol", "BTCUSDT")
@@ -68,8 +78,10 @@ public class BinanceAPI implements APIsInterface{
                     .getBody();
         coins.put("tezos", xtz);
 
+        // return hashmap with all coin objects
         return coins;
 
+        
         /*    Old Coins, which will not be used anymore 
         CoinsInterface safemoon = new SafeMoon();
         safemoon = Unirest.get("https://api.binance.com/api/v3/ticker/24hr")
@@ -103,9 +115,11 @@ public class BinanceAPI implements APIsInterface{
 
     @Override
     public HashMap<String, ArrayList<CandleStick>> getCandlestickData() {
-        //ArrayList<ArrayList<CandleStick>> candlesBinance = new ArrayList<>();
+        // candlestick data of all coins will be saved in this hashmap
         HashMap<String, ArrayList<CandleStick>> candlesBinance = new HashMap<>();
 
+        // putting each candlestick data into the hashmap
+        // using coinname as key
         // Candles Bitcoin
         candlesBinance.put("bitcoin", getCandleData("BTCUSDT"));
         // Candles Cardano
@@ -119,10 +133,20 @@ public class BinanceAPI implements APIsInterface{
         // Candles Tezos
         candlesBinance.put("tezos", getCandleData("XTZUSDT"));
         
+        // return hashmap with all candlestick arraylists
         return candlesBinance;
     }
 
+    /**
+     * get candlestick data from public api through rest-request
+     * candlestick data is in 1h timeframes 
+     * api returns candlestick data in one big json-array
+     * this methods maps the received json-array into candlestick arrays and puts them into a arraylist
+     * @param symbol symbol of the coin to get the data for
+     * @return arraylist with candlestick data
+     */
     private ArrayList<CandleStick> getCandleData(String symbol) {
+        // get data from api
         JSONArray resp = Unirest.get("https://api.binance.com/api/v3/klines")
                         .queryString("symbol", symbol)
                         .queryString("interval", "1h")
@@ -131,10 +155,15 @@ public class BinanceAPI implements APIsInterface{
                         .getBody()
                         .getArray();
         
+        // create arraylist with received candlestick data
+        // received data is in one big json-array with nested candlestick arrays
         ArrayList<CandleStick> binanceCandlesList = new ArrayList<CandleStick>();
+        
+        //loop through all nested arrays
         for (int i=0; i < resp.length(); i++) {
             JSONArray candle = (JSONArray) resp.get(i);
 
+            // map nested array to candlestick object
             long openTime = candle.getLong(0);
             float open = candle.getFloat(1);
             float high = candle.getFloat(2);
@@ -151,10 +180,11 @@ public class BinanceAPI implements APIsInterface{
             CandleStick candleData = new CandleStick(openTime, open, high, low, close, volume, closeTime, quoteAssetVolume, numberOfTrades, takerBuyBase, takerBuyQuote, ignore);
             binanceCandlesList.add(candleData);
         }
+        //return arraylist with candlestick data
         return binanceCandlesList;
     }
 
-    // hilfsmethode export csv
+    // export method used for testing 
     private void exportCandle(ArrayList<CandleStick> candles, String filename) {
         FileWriter file; 
             try {
@@ -171,6 +201,7 @@ public class BinanceAPI implements APIsInterface{
             }
     }
 
+    //export method used for testing
     private void exportCoin(String filename, CoinsInterface coin) {
         FileWriter file; 
         try {
