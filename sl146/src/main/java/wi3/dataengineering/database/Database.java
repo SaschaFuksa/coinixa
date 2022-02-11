@@ -36,7 +36,8 @@ public class Database {
                     file.flush();
                     file.close();
                     success = true;
-                    System.out.println("Coin Candlesticks Exportiert in Ordner: " + entry.getKey() + " erfolgreich! --> Nachschauen!");
+                    //System.out.println("Coin Candlesticks Exportiert in Ordner: " + entry.getKey() + " erfolgreich! --> Nachschauen!");
+                    System.out.println("CandleStick Export: -- " + entry.getKey() +" -- Time: -- " + System.currentTimeMillis());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -57,7 +58,8 @@ public class Database {
                 file.flush();
                 file.close();
                 success = true;
-                System.out.println("Coin Value Exportiert in Ordner: " + entry.getKey() +  " erfolgreich! --> Nachschauen!");
+                //System.out.println("Coin Value Exportiert in Ordner: " + entry.getKey() +  " erfolgreich! --> Nachschauen!");
+                System.out.println("Coin Value Export: -- " + entry.getKey() +" -- Time: -- " + System.currentTimeMillis());
             } catch (IOException e) {
                 e.printStackTrace();
             } 
