@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="word-count-beam" />
+        <module name="CoinixaApiReader" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="word-count-beam" target="1.8" />
+      <module name="CoinixaApiReader" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/word-count-beam.iml" filepath="$PROJECT_DIR$/word-count-beam.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CoinixaApiReader.iml" filepath="$PROJECT_DIR$/CoinixaApiReader.iml" />
     </modules>
   </component>
 </project>
