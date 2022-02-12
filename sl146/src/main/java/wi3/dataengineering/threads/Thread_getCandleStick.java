@@ -11,6 +11,12 @@ import wi3.dataengineering.unirest.apis.BiteniumAPI;
 import wi3.dataengineering.unirest.apis.OkxAPI;
 import wi3.dataengineering.unirest.candlesticks.CandleStick;
 
+/**
+ * used to run a thread which uses methods from other classes to:
+ * get candlestick data for all six coins
+ * export all values
+ * repeat the process every 24 hours
+ */
 public class Thread_getCandleStick implements Runnable{
     private Boolean running = false;
     private Thread worker;
@@ -32,6 +38,7 @@ public class Thread_getCandleStick implements Runnable{
         worker.interrupt();
     }
 
+    // method to get data and export data
     private void getCandleSticksAndExport() {
         System.out.println("Starting Thread - Get Candlesticks and Export to Datastorage!");
 
@@ -41,6 +48,7 @@ public class Thread_getCandleStick implements Runnable{
         APIsInterface bitenium = new BiteniumAPI();
         APIsInterface okx = new OkxAPI();
         
+        // while loop which gets and exports data until its interrupted through the terminal
         while (running) {
 
             export.exportCandle(binance.getCandlestickData(), "binance");
@@ -49,6 +57,13 @@ public class Thread_getCandleStick implements Runnable{
 
             export.exportCandle(okx.getCandlestickData(), "okx");
 
+            // after initial get and export this threads sleeps 24 hours
+            try {
+                Thread.sleep(86400000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.out.println("Thread was interrupted");
+            }
         }
     }
 
