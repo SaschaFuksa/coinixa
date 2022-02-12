@@ -6,6 +6,7 @@ import dash
 import pandas as pd
 from dash.dependencies import Input, Output, State
 from dash import Output, Input
+from csv import writer
 
 df_coins = pd.read_csv(r'C:\Users\Jakob\PycharmProjects\Coinixa\js447\Data\UI\coins.csv')
 df_apis = pd.read_csv(r'C:\Users\Jakob\PycharmProjects\Coinixa\js447\Data\UI\apis.csv')
@@ -90,6 +91,7 @@ app.layout = html.Div(
                 ####Actual value displayed########
 
                 html.Div([], id='actual-value'),
+                html.Div([], id='value-change'),
 
             ], className='card-tab card', width=True),
 
@@ -150,7 +152,7 @@ app.layout = html.Div(
 
                                                                                              }),
 
-                html.Button('Submit', id='submit-button', n_clicks=0),
+                html.Button('Submit', id='submit-button'),
             ], className='card-tab card', width=True),
 
         ]),
@@ -228,7 +230,7 @@ def update_graph(api_id, coin_id, slider_data):
             a = a + 1
         fig.update_layout(xaxis_rangeslider_visible=False)
         return fig
-
+# catch every other input
     else:
         df2 = pd.read_csv(
             'C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\Binance\\'
@@ -255,11 +257,13 @@ def setactualvalue(api_id, coin_id):
         parse_dates=True)
     df2.columns = df2.columns.str.strip()
     return [
-        html.Div(
+        html.Div([
 
             # Zuweisung actual value, 4th row, last entry
-            html.H3(str(df2.iloc[-1, 3]) + " $")
-        )
+            html.H3(str(df2.iloc[-1, 3]) + " $"),
+            html.H4(""+str(round(df2.iloc[-1, 3]-df2.iloc[-2, 3], 2)) + " $")
+
+        ])
     ]
 
 
@@ -271,8 +275,17 @@ def setactualvalue(api_id, coin_id):
     [Input("submit", "n_clicks")],
     [State("mail-input", "value"), State("threshold-input", "value")])
 def adduser(a, b, c):
-    print(a)
-    return None
+    print(b)
+    list_data = [b, c]
+    print(list_data)
+    return [
+        html.Div(
+
+            # Zuweisung actual value, 4th row, last entry
+            html.H3("Notification added")
+        )
+    ]
+
 
     # fig.update_yaxes(range=[minY, maxY])
     # fig.update_layout(xaxis_rangeslider_visible=False)
