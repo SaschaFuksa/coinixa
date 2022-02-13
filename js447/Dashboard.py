@@ -6,6 +6,7 @@ import dash
 import pandas as pd
 from dash.dependencies import Input, Output, State
 from dash import Output, Input
+import json
 from csv import writer
 
 df_coins = pd.read_csv(r'C:\Users\Jakob\PycharmProjects\Coinixa\js447\Data\UI\coins.csv')
@@ -251,17 +252,23 @@ def update_graph(api_id, coin_id, slider_data):
 # function setactualvalue builds the actual value tab and coin specific information
 
 def setactualvalue(api_id, coin_id):
-    df2 = pd.read_csv(
-        'C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\' + api_id[0] + '\\'
-        + coin_id + '\\candleStickData_' + api_id[0] + '_' + coin_id + '.csv',
-        parse_dates=True)
-    df2.columns = df2.columns.str.strip()
+    # df = pd.read_json('C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\' + api_id[0] + '\\'
+    #     + coin_id + '\\coin_Value_' + api_id[0] + '_' + coin_id + '.json')
+    with open('C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\' + api_id[0] + '\\'
+         + coin_id + '\\coin_Value_' + api_id[0] + '_' + coin_id + '.json') as json_file:
+        data = json.load(json_file)
+    # df2 = pd.read_csv('C:\\Users\\Jakob\\PycharmProjects\\Coinixa\\js447\Data\\' + api_id[0] + '\\'
+    #     + coin_id + '\\candleStickData_' + api_id[0] + '_' + coin_id + '.csv',
+    #     parse_dates=True)
+    # df2.columns = df2.columns.str.strip()
     return [
         html.Div([
 
             # Zuweisung actual value, 4th row, last entry
-            html.H3(str(df2.iloc[-1, 3]) + " $"),
-            html.H4(""+str(round(df2.iloc[-1, 3]-df2.iloc[-2, 3], 2)) + " $")
+            html.H3(str(data["lastPrice"]) + " $"),
+            html.H4(str(data["priceChange"]) + " $"),
+            # html.H3(""+str(df2.iloc[-1, 3]) + " $"),
+            # html.H4("" + str(round(df2.iloc[-1, 3] - df2.iloc[-2, 3], 2)) + " $")
 
         ])
     ]
