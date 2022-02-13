@@ -66,7 +66,7 @@ public class BiteniumAPI implements APIsInterface{
 
         CoinsInterface shib = new ShibaInu();
         shib = Unirest.get("https://api.bitenium.com/spotapi/api/ticker24Hr")
-                    .queryString("symbol", "SHIBUSDT")
+                    .queryString("symbol", "1000SHIBUSDT")
 				    .asObject(ShibaInu.class)
                     .getBody();
         coins.put("shibainu", shib);

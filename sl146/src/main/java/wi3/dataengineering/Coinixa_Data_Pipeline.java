@@ -1,5 +1,6 @@
 package wi3.dataengineering;
 
+import wi3.dataengineering.threads.Thread_CheckPrizeChanges;
 import wi3.dataengineering.threads.Thread_getCandleStick;
 import wi3.dataengineering.threads.Thread_getCoinValue;
 
@@ -8,9 +9,6 @@ public class Coinixa_Data_Pipeline
     public static void main( String[] args )
     {
 
-        
-
-        
         //Threading:
         //  Thread 1: get coin value from public apis -> binance, bitenium, okx
         //  create thread which will update the coin value of all coins every 5 sec
@@ -20,12 +18,15 @@ public class Coinixa_Data_Pipeline
 
         //  Thread 2: get candlestick data from public apis -> binance, bitenium, okx
         //  create thread which will update candlestick data of all coins every 24h
+         
         Thread_getCandleStick thread_coinCandleStick = new Thread_getCandleStick();
         thread_coinCandleStick.start();
 
+
         //  Thread 3: check price changes of coins an send notification e-mails -> WIP
         //  If theres time left, try to implemnt e-mail notifications
-
+        Thread_CheckPrizeChanges thread_CheckPrizeChanges = new Thread_CheckPrizeChanges();
+        thread_CheckPrizeChanges.start();
 
         // non threaded methods to test -> get and export data
         /* Database export = new Database();

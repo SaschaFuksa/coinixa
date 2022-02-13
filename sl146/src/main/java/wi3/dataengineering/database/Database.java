@@ -24,6 +24,7 @@ public class Database {
         
         //change path for google cloud deployment
         String path = "C:/Data/" + api + "/";
+        //String path = "/home/sascha_fuksa/Data/" + api + "/";
 
         Boolean success = false;
             for (Entry<String, ArrayList<CandleStick>> entry : candles.entrySet()) {
@@ -49,6 +50,7 @@ public class Database {
         FileWriter file;
         
         String path = "C:/Data/" + api + "/";
+        //String path = "/home/sascha_fuksa/Data/" + api + "/";
         
         Boolean success = false;
         for (Entry<String, CoinsInterface> entry : coins.entrySet()) {
