@@ -23,8 +23,8 @@ public class Database {
         FileWriter file;
         
         //change path for google cloud deployment
-        String path = "C:/Data/" + api + "/";
-        //String path = "/home/sascha_fuksa/Data/" + api + "/";
+        //String path = "C:/Data/" + api + "/";
+        String path = "/home/sascha_fuksa/Data/" + api + "/";
 
         Boolean success = false;
             for (Entry<String, ArrayList<CandleStick>> entry : candles.entrySet()) {
@@ -49,8 +49,8 @@ public class Database {
     public Boolean exportCoin(HashMap<String, CoinsInterface> coins, String api) {
         FileWriter file;
         
-        String path = "C:/Data/" + api + "/";
-        //String path = "/home/sascha_fuksa/Data/" + api + "/";
+        //String path = "C:/Data/" + api + "/";
+        String path = "/home/sascha_fuksa/Data/" + api + "/";
         
         Boolean success = false;
         for (Entry<String, CoinsInterface> entry : coins.entrySet()) {
