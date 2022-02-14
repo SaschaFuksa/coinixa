@@ -162,7 +162,7 @@ public class Thread_CheckPrizeChanges implements Runnable{
             message.setFrom(new InternetAddress("from@gmail.com"));
             message.setRecipients(
             Message.RecipientType.TO, InternetAddress.parse(emailTo));
-            message.setSubject("Mail Subject");
+            message.setSubject("Coin Notification!");
 
             String msg = "Folgende Coins hatten eine starke Kursänderung: "
                 + coinWarnings.toString()
