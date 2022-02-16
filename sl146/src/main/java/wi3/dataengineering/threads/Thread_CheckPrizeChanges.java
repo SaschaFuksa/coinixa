@@ -30,7 +30,8 @@ import org.json.simple.parser.ParseException;
  */
 public class Thread_CheckPrizeChanges implements Runnable{
     //private final String path = "C:/Data/";
-    private final String path = "/home/sascha_fuksa/Data/";
+    //private final String path = "/home/sascha_fuksa/Data/";
+    private final String path = "/home/j_r_schaal/Data/";
     private final String subscriberPath = path + "/UI/subscriber.json";
     private final String[] apis = {"binance", "bitenium", "okx"};
     private final String[] coins = {"bitcoin", "cardano", "dogecoin", "ethereum", "shibainu", "tezos"};
